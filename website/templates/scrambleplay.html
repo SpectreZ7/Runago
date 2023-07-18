@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .container{
+    margin-top: 100px !important;
+  }
+  .words_defs{
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+
+  }
+  th{
+    height: 70px;
+    color: rgb(255, 255, 255);
+  }
+  .table{
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 25px;
+    border: 1px solid;
+  }
+  .table, th, td{
+    border: 2px solid;
+    background-color: rgb(0, 0, 0);
+  }
+  #definitions{
+    color:rgb(201, 11, 11);
+  }
+  #words{
+    color:rgb(59, 11, 201);
+  }
+</style>
+
+<div class="container" style="background-color:black;">
+  <div class="scrambleplay" style="background-color: black;">
+    <table class="table" style="margin-top: 60px;">
+      <thead>
+        <tr>
+          <th>Word</th>
+          <th>Definition</th>
+        </tr>
+      </thead>  
+      <tbody>
+        {% for i, scrambled_definition in enumerate(shuffled_definitions) %}
+        <tr>
+          <td class="words_defs" id="words">{{ shuffled_words[i] }}</td>
+          <td class="words_defs" id="definitions">{{ scrambled_definition }}</td>   
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+  let clickedElements = [];
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const tableCells = document.querySelectorAll("td");
+
+    tableCells.forEach((cell) => {
+      cell.addEventListener("click", function () {
+        if (clickedElements.length < 2 && !clickedElements.includes(cell)) {
+          clickedElements.push(cell);
+          cell.style.backgroundColor = "rgba(255,255,255, 1)";
+        }
+        
+
+        if (clickedElements.length === 2) {
+          setTimeout(() => {
+            clickedElements.forEach((element) => {
+              element.style.backgroundColor = "";
+            });
+// please write code that will convert the words_json python flask array into a javascript array with same elements
+// please write code that will convert the definitions_json python flask array into a javascript array with same elements
+            //const shuffled_words = {{ words_json }};
+            //const shuffled_definitions = {{ definitions_json }};
+            
+
+            clickedElements = [];
+            for (let i = 0; i < shuffled_words.length; i++) {
+              if (shuffled_words[i] === clickedElements[0].innerHTML) {
+                if (shuffled_definitions[i] === clickedElements[1].innerHTML) {
+                  clickedElements[0].style.backgroundColor = "green";
+                  clickedElements[1].style.backgroundColor = "green";
+                } else {
+                  clickedElements[0].style.backgroundColor = "red";
+                  clickedElements[1].style.backgroundColor = "red";
+                }
+              }
+            }
+          }, 1000);
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}
+
+
+

@@ -1,0 +1,188 @@
+{% extends "base.html" %} {%block title%}login{%endblock%}
+{% block content %}
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Login Form</title>
+    <link rel="shortcut icon" href="/assets/favicon.ico">
+    <style>
+        *{
+            font-family: inherit;
+        }
+    .container{
+
+        height: 50vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 450px;
+        margin: 0 auto;
+        padding: 2rem;
+        box-shadow: 0 0 65px rgba(var(--accent-rgb), 0.3);
+        border-radius: 10px;
+        /* background: rgba(var(--secondary-rgb), 0.); */
+        background: var(--lighter-bg);
+        border: 2px solid var(--primary);
+    }
+    
+        
+        /* .form--hidden {
+            display: none;
+        }
+         */
+
+        
+
+        
+        .form__title {
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--accent);
+            /* text-transform: uppercase; */
+        }
+        
+        .form__message {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .form__message--success {
+            color: var(--color-success);
+        }
+        
+        .form__message--error {
+            color: var(--color-error);
+        }
+        
+        .form__input-group {
+            
+            margin-bottom: 1rem;
+            min-width: 280px;
+        }
+        
+        .form__input {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            box-sizing: border-box;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            outline: none;
+            color: var(--text);
+            background: #9d92f62c;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        
+        .form__input::placeholder {
+            color: rgba(var(--text-rgb), 0.65);
+        }
+        
+        .form__input:focus::placeholder {
+            color: var(--text);
+        }
+        
+        .form__input:is(:focus, :hover) {
+            border: 2px solid rgba(var(--accent-rgb), 1);
+            background: #261f5878;
+        }
+        
+        .form__input--error {
+            color: var(--color-error);
+            border-color: var(--color-error);
+        }
+        
+        .form__input-error-message {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--color-error);
+        }
+        
+        .form__button {
+            width: 60%;
+            padding: 0.7rem 2rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #ffffff;
+            border: none;
+            border-radius: 7px;
+            /* outline: none; */
+            cursor: pointer;
+            background: var(--primary);
+            transition: all var(--transition-speed);
+            margin-bottom: 1rem;
+        }
+        
+        .form__button:hover {
+            transition: all var(--transition-speed);
+            /* transform: scale(1.1); */
+            box-shadow: 0 10px 20px rgba(var(--accent-rgb), 0.5);
+        }
+        
+        .form__button:active {
+            transform: scale(0.98);
+        }
+        
+        .form__text {
+            text-align: center;
+            color: rgba(var(--text-rgb), 0.65);
+            text-decoration: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.8rem;
+        }
+        
+        .form__link {
+
+            font-size: 0.8rem;
+            transition: all var(--transition-speed);
+            text-decoration: underline;
+        }
+        
+        .form__link:hover {
+            transition: all var(--transition-speed);
+            color: rgba(var(--text-rgb), 1);
+            
+    }
+        .container {
+        padding-top: 50px; /* or any other value in pixels, em, etc. */
+        }
+    </style>
+
+</head>
+    <form method="POST" class = "form">
+    <div class="container">
+        <div class="form" id="login">
+            <h1 class="form__title">Please Login</h1>
+            <div class="form__input-group">
+                <label for="email"></label>
+                <input 
+                    type="text" 
+                    class="form__input"
+                    id="email"
+                    name="email" 
+                    autofocus placeholder="Username or email">
+            </div>
+            <div class="form__input-group">
+                <label for="password"></label>
+                <input 
+                    type="password" 
+                    class="form__input"
+                    id="password"
+                    name="password" 
+                    autofocus placeholder="Password">
+            </div>
+            <button class="form__button" type="submit">Login</button>
+            <!-- <p class="form__text">
+                <a href="#" class="form__link">Forgot your password?</a>
+            </p> -->
+            <p class="form__text">
+                Don't have an account?
+                <a class="form__link" id="signup" href="/signuppage" id="linkCreateAccount">Create account</a>
+            </p>
+        </div>
+    </div>
+    </form>
+{% endblock %}

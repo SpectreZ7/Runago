@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Games{% endblock %}
+{% block content %}
+<head>
+    <style>
+       .content{
+        text-align: center;
+       }
+        
+        .content h1{
+            font-family: 'Open Sans', sans-serif;
+            font-size: 20px;
+            text-decoration: none;
+        }
+        .content a:hover{
+            color:black;
+
+        }
+        .content a{
+            text-decoration: none;
+            font-size:20px;
+            color: rgb(194, 10, 10);
+        }
+        .body{
+            background-color: rgba(0, 0, 0, 0.514);
+        }
+    </style>
+</head>
+<div class = "content" style="margin-top: 200px;" >
+    <h1>Here you'll find all the games for learning languages offered by Unago</h1>
+    <h1>Discover, learn, and most importantly, have fun</h1>
+    <a href="/scramblewg">scramble word game</a><br>
+    <a href="/flashcardswg">flashcards</a><br>
+    <a href="/crosswordg">crossword game</a>
+</div>  
+{% endblock %}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="apple-touch-icon" sizes="180x180" href="static/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/website/static/favicon-16x16.png">
+    <link rel="shortcut icon" href="/website/static/favicon.ico" type="image/x-icon">
+    <link rel = "image_src" href = "/website/static/geometric-pattern.png">
+    <style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+
+      :root{
+        --text: #e6e8ff;
+        --background: #000219;
+        --lighter-bg: rgb(13, 17, 51);
+        --primary: #6874ff;
+        --secondary: #282f70;
+        --accent: #4c58dc;
+
+        --text-rgb: 230, 232, 255; 
+        --background-rgb: 0, 2, 25;
+        --primary-rgb: 104, 116, 255;
+        --secondary-rgb: 32, 39, 99;
+        --accent-rgb: 76, 88, 220;
+
+        --transition-speed: 250ms;
+
+        --from_input-bg: #9d92f62c;
+        
+      }
+      *{
+        margin:0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      a{
+        color: inherit;
+        text-decoration: none;
+      }
+
+      li {
+    
+    list-style: none;
+  
+     }
+
+      body{
+      background-color: var(--background);
+      color: var(--text);
+      transition: all var(--transition-speed) !important;
+      font-family: 'Roboto', sans-serif;
+      width: 100%;
+      min-height: 100vh;
+      display: grid ;
+      place-items: center;
+    }
+    
+    nav {
+      position: absolute; 
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      min-height: 70px;
+      background: rgba(var(--secondary-rgb), 0.4);
+      /* background: linear-gradient(0deg, rgba(var(--secondary-rgb),0) 0%, rgba(var(--secondary-rgb),1) 100%); */
+      /* text-transform: uppercase; */
+      
+
+    }
+    
+    .navbar-nav {
+      display: flex;
+      gap: 1rem;
+      justify-content: space-around;
+      /* width: 20%; */
+    
+    }
+    
+
+    
+    .navbar-nav a {
+      font-weight: bold;
+
+      padding: 14px 16px;
+      transition: 250ms !important;
+    
+    }
+    
+    .navbar-nav a:hover:not(.active) {
+      background-color: rgb(254, 255, 255);
+    
+    }
+  
+    
+    </style>
+
+    <title>{% block title %}Home{% endblock %}</title>
+    
+  </head>
+  <body>
+    {% if user.is_authenticated %}
+    <nav>
+    
+      <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-nav">
+          
+          <a class="nav-item nav-link" id="home" href="/">Home</a>
+          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          <a class="nav-item nav-link" id="games" href="/games">Games</a>
+          <a class="nav-item nav-link" id="library" href="/library">Library</a>
+
+          
+        </div>
+      </div>
+    </nav>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+      {% if category == 'error'%}
+      <div class ="alert alert-danger alter-dismissable fade show" role ="alert"> 
+        {{ message }}
+        <button type ="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% else %}
+      <div class ="alert alert-success alter-dismissable fade show" role ="alert"> 
+        {{ message }}
+        <button type ="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+      </div>
+      {% endif %}
+      {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="contain">
+      {% block content %}
+      {% endblock %}
+    </div>
+    
+    <script
+  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+  crossorigin="anonymous"
+></script>
+<!-- jQuery library is included. Used for simplifying HTML document traversal, event handling, and animation. -->
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+  crossorigin="anonymous"
+></script>
+<!-- Popper.js library is included. It is used for managing popovers, tooltips, and other UI components. -->
+
+<script
+  src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+  crossorigin="anonymous"
+></script>
+<!-- Bootstrap library is included. It provides a set of pre-designed CSS and JavaScript components for building responsive web pages. -->
+
+<script
+  type="text/javascript"
+></script>
+
+  </body>
+</html>
