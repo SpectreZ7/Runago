@@ -10,8 +10,57 @@
         *{
             font-family: inherit;
         }
+        @keyframes floatshitRight {
+            0% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(10px,-30px)
+            }
+            100%{
+                transform: translate(0, 0);
+            }
+        }
+        @keyframes floatshitLeft {
+            0% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(-10px,30px)
+            }
+            100%{
+                transform: translate(0, 0);
+            }
+        }
+    .img-login-page {
+        z-index: -1;
+        position: absolute;
+        max-width: 430px;
+        opacity: 0.7;
+        transition: var(--transition-speed);
+        
+    }
+    .img-login-page:hover {
+        
+        transition: var(--transition-speed);
+        opacity: 1;
+        
+    }
+    .right{
+        right: 11rem;
+        top: 6rem;
+        
+        animation: floatshitRight 5s  infinite ;
+        animation-timing-function: cubic-bezier(.31,.03,.28,1.07);
+        
+    }
+    .left{
+        left: 11rem;
+        bottom: 6rem;
+        animation: floatshitLeft 4s ease-in-out infinite;
+    }
     .container{
-
+        position: relative;
         height: 50vh;
         display: flex;
         align-items: center;
@@ -185,4 +234,6 @@
         </div>
     </div>
     </form>
+    <img class="img-login-page left" src="static/login-page-img-left.png" alt="">
+    <img class="img-login-page right" src="static/login-page-img-right.png" alt="">
 {% endblock %}
