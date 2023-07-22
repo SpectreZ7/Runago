@@ -69,26 +69,24 @@
         width: 450px;
         margin: 0 auto;
         padding: 2rem;
-        box-shadow: 0 0 65px rgba(var(--accent-rgb), 0.3);
+        box-shadow: 0 0 65px rgba(var(--clr-accent-2-rgb), 0.3);
         border-radius: 10px;
         /* background: rgba(var(--secondary-rgb), 0.); */
-        background: var(--lighter-bg);
-        border: 2px solid var(--primary);
+        background: var(--clr-dark-1);
+        border: 2px solid var(--clr-accent-1);
     }
     
-        
-        /* .form--hidden {
-            display: none;
-        }
-         */
 
         
 
         
         .form__title {
-            margin-bottom: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
             text-align: center;
             color: var(--accent);
+            font-size: 1.65rem;
+            opacity: 0.95;
             /* text-transform: uppercase; */
         }
         
@@ -102,7 +100,7 @@
         }
         
         .form__message--error {
-            color: var(--color-error);
+            color: red;
         }
         
         .form__input-group {
@@ -119,33 +117,33 @@
             border-radius: 6px;
             border: 2px solid transparent;
             outline: none;
-            color: var(--text);
+            color: var(--clr-light-1);
             background: #9d92f62c;
             transition: background 0.2s, border-color 0.2s;
         }
         
         .form__input::placeholder {
-            color: rgba(var(--text-rgb), 0.65);
+            color: rgba(var(--clr-light-1-rgb), 0.65);
         }
         
         .form__input:focus::placeholder {
-            color: var(--text);
+            color: var(--clr-light-1);
         }
         
         .form__input:is(:focus, :hover) {
-            border: 2px solid rgba(var(--accent-rgb), 1);
+            border: 2px solid rgba(var(--clr-accent-2-rgb), 1);
             background: #261f5878;
         }
         
         .form__input--error {
-            color: var(--color-error);
-            border-color: var(--color-error);
+            color: var(--clr-red-0);
+            border-color: var(--clr-red-0);
         }
         
         .form__input-error-message {
             margin-top: 0.5rem;
             font-size: 0.85rem;
-            color: var(--color-error);
+            color: var(--clr-red-0);
         }
         
         .form__button {
@@ -153,12 +151,12 @@
             padding: 0.7rem 2rem;
             font-weight: bold;
             font-size: 1.1rem;
-            color: #ffffff;
+            color: var(--clr-light-1);
             border: none;
             border-radius: 7px;
             /* outline: none; */
             cursor: pointer;
-            background: var(--primary);
+            background: var(--clr-accent-1);
             transition: all var(--transition-speed);
             margin-bottom: 1rem;
         }
@@ -166,7 +164,7 @@
         .form__button:hover {
             transition: all var(--transition-speed);
             /* transform: scale(1.1); */
-            box-shadow: 0 10px 20px rgba(var(--accent-rgb), 0.5);
+            box-shadow: 0 10px 20px rgba(var(--clr-accent-2-rgb), 0.5);
         }
         
         .form__button:active {
@@ -175,7 +173,7 @@
         
         .form__text {
             text-align: center;
-            color: rgba(var(--text-rgb), 0.65);
+            color: rgba(var(--clr-light-1-rgb), 0.65);
             text-decoration: none;
             cursor: pointer;
             display: flex;
@@ -192,18 +190,25 @@
         
         .form__link:hover {
             transition: all var(--transition-speed);
-            color: rgba(var(--text-rgb), 1);
+            color: rgba(var(--clr-light-1-rgb), 1);
             
     }
         .container {
         padding-top: 50px; /* or any other value in pixels, em, etc. */
         }
+        .runago-logo{
+
+            max-width: 220px;
+        }
     </style>
 
 </head>
+    
     <form method="POST" class = "form">
     <div class="container">
+        
         <div class="form" id="login">
+            <img class="runago-logo" src="static/runago-logo.svg" alt="">
             <h1 class="form__title">Please Login</h1>
             <div class="form__input-group">
                 <label for="email"></label>

@@ -8,141 +8,208 @@
     <link rel="shortcut icon" href="/assets/favicon.ico">
     <link rel = "image_src" href = "/website/static/geometric-pattern.png">
     <style>
-    body{
-        background-image: url("/website/static/geometric-pattern.png");
+        *{
+            font-family: inherit;
+        }
+        @keyframes floatshitRight {
+            0% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(10px,-30px)
+            }
+            100%{
+                transform: translate(0, 0);
+            }
+        }
+        @keyframes floatshitLeft {
+            0% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(-10px,30px)
+            }
+            100%{
+                transform: translate(0, 0);
+            }
+        }
+    .img-login-page {
+        z-index: -1;
+        position: absolute;
+        max-width: 430px;
+        opacity: 0.7;
+        transition: var(--transition-speed);
+        
+    }
+    .img-login-page:hover {
+        
+        transition: var(--transition-speed);
+        opacity: 1;
+        
+    }
+    .right{
+        right: 11rem;
+        top: 6rem;
+        
+        animation: floatshitRight 5s  infinite ;
+        animation-timing-function: cubic-bezier(.31,.03,.28,1.07);
+        
+    }
+    .left{
+        left: 11rem;
+        bottom: 6rem;
+        animation: floatshitLeft 4s ease-in-out infinite;
     }
     .container{
-        --color-primary: #df0b0b;
-        --color-primary-dark: #030303;
-        --color-secondary: #d10d0d;
-        --color-error: #bd0e0e;
-        --color-success: #4bb544;
-        --border-radius: 6px;
-        margin: 0;
-        height: 60vh;
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 18px;
-        background-size: cover;    
+        text-align: center;
         width: 450px;
-        max-width: 450px;
-        margin: auto;
-        padding: 2rem;
-        box-shadow: 0 0 40px rgba(255, 3, 1, 0.882);
-        border-radius: var(--border-radius);
-        background: #000000;}
-    
-    .container,
-    .form__input,
-    .form__button {
-        font: 500 1rem 'Quicksand', sans-serif;
-        background-image: url("/website/static/geometric-pattern.png");
+        margin: 0 auto;
+        padding: 2.5rem;
+        box-shadow: 0 0 65px rgba(var(--clr-accent-2-rgb), 0.3);
+        border-radius: 10px;
+        /* background: rgba(var(--secondary-rgb), 0.); */
+        background: var(--clr-dark-1);
+        border: 2px solid var(--clr-accent-1);
     }
     
-    .form--hidden {
-        display: none;
+
+        
+
+        
+        .form__title {
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: var(--accent);
+            font-size: 1.5rem;
+            opacity: 0.95;
+            /* text-transform: uppercase; */
+        }
+        
+        .form__message {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .form__message--success {
+            color: var(--color-success);
+        }
+        
+        .form__message--error {
+            color: var(--clr-red-0);
+        }
+        
+        .form__input-group {
+            
+            margin-bottom: 1rem;
+            min-width: 280px;
+        }
+        
+        .form__input {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            box-sizing: border-box;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            outline: none;
+            color: var(--clr-light-1);
+            background: #9d92f62c;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        
+        .form__input::placeholder {
+            color: rgba(var(--clr-light-1-rgb), 0.65);
+        }
+        
+        .form__input:focus::placeholder {
+            color: var(--clr-light-1);
+        }
+        
+        .form__input:is(:focus, :hover) {
+            border: 2px solid rgba(var(--clr-accent-2-rgb), 1);
+            background: #261f5878;
+        }
+        
+        .form__input--error {
+            color: var(--clr-red-0);
+            border-color: var(--clr-red-0);
+        }
+        
+        .form__input-error-message {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--clr-red-0);
+        }
+        
+        .form__button {
+            width: 60%;
+            padding: 0.7rem 2rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--clr-light-1);
+            border: none;
+            border-radius: 7px;
+            /* outline: none; */
+            cursor: pointer;
+            background: var(--clr-accent-1);
+            transition: all var(--transition-speed);
+            margin-top: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form__button:hover {
+            transition: all var(--transition-speed);
+            /* transform: scale(1.1); */
+            box-shadow: 0 10px 20px rgba(var(--clr-accent-2-rgb), 0.5);
+        }
+        
+        .form__button:active {
+            transform: scale(0.98);
+        }
+        
+        .form__text {
+            text-align: center;
+            color: rgba(var(--clr-light-1-rgb), 0.65);
+            text-decoration: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.8rem;
+            margin-bottom: 0.7rem;
+        }
+        
+        .form__link {
+
+            font-size: 0.8rem;
+            transition: all var(--transition-speed);
+            text-decoration: underline;
+        }
+        
+        .form__link:hover {
+            transition: all var(--transition-speed);
+            color: rgba(var(--clr-light-1-rgb), 1);
+            
     }
-    
-    .form > *:first-child {
-        margin-top: 0;
-    }
-    
-    .form > *:last-child {
-        margin-bottom: 0;
-    }
-    
-    .form__title {
-        margin-bottom: 2rem;
-        text-align: center;
-        color: rgb(255, 0, 0);
-        font-family: "Garamond", sans-serif;
-    }
-    
-    .form__message {
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-    
-    .form__message--success {
-        color: var(--color-success);
-    }
-    
-    .form__message--error {
-        color: var(--color-error);
-    }
-    
-    .form__input-group {
-        margin-bottom: 1rem;
-    }
-    
-    .form__input {
-        display: block;
-        width: 100%;
-        padding: 0.75rem;
-        box-sizing: border-box;
-        border-radius: var(--border-radius);
-        border: 1px solid #dddddd;
-        outline: none;
-        background: #eeeeee;
-        transition: background 0.2s, border-color 0.2s;
-    }
-    
-    .form__input:focus {
-        border-color: var(--color-primary);
-        background: #ffffff;
-    }
-    
-    .form__input--error {
-        color: var(--color-error);
-        border-color: var(--color-error);
-    }
-    
-    .form__input-error-message {
-        margin-top: 0.5rem;
-        font-size: 0.85rem;
-        color: var(--color-error);
-    }
-    
-    .form__button {
-        width: 100%;
-        padding: 1rem 2rem;
-        font-weight: bold;
-        font-size: 1.1rem;
-        color: #ffffff;
-        border: none;
-        border-radius: var(--border-radius);
-        outline: none;
-        cursor: pointer;
-        background: var(--color-primary);
-    }
-    
-    .form__button:hover {
-        background: var(--color-primary-dark);
-    }
-    
-    .form__button:active {
-        transform: scale(0.98);
-    }
-    
-    .form__text {
-        text-align: center;
-    }
-    
-    .form__link {
-        color: var(--color-secondary);
-        text-decoration: none;
-        cursor: pointer;
-    }
-    
-    .form__link:hover {
-        text-decoration: underline;
-    }</style>
+        .container {
+        padding-top: 50px; /* or any other value in pixels, em, etc. */
+        }
+        .runago-logo{
+
+            max-width: 220px;
+            margin-bottom: -2rem;
+        }
+    </style>
 
 </head>
     <form class= "form" method="POST">
     <div class="container">
         <div class="form" id="createAccount">
+        <img class="runago-logo" src="static/runago-logo.svg" alt="">
         <h1 class="form__title">Create Account</h1>
         <div class="form__input-group">
             <label for="Username"></label>
@@ -180,11 +247,13 @@
                 name="password2"
                     autofocus placeholder="Confirm password">
         </div>
-        <button class="form__button" type="submit">Continue</button>
+        <button class="form__button" type="submit">Create</button>
         <p class="form__text">
             <a class="form__link" id="login"href="/loginpage" id="linkLogin">Already have an account? Login</a>
         </p>
         </div>
     </div>
     </form>
+    <img class="img-login-page left" src="static/login-page-img-left.png" alt="">
+    <img class="img-login-page right" src="static/login-page-img-right.png" alt="">
 {% endblock %}
