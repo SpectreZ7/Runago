@@ -3,12 +3,15 @@
 {% block content %}
 <head>
     <style>
-    .vertical-text input[type= "text"]{
+    /* .vertical-text input[type= "text"]{
         margin-top: 400px;
-    }
+    } */
     .vertical-text input{
         display: flex;
-        flex-direction: column;
+        width: 280px;
+        min-height: 20px;
+        font-size: 35px;
+        /* flex-direction: column; */
     }
     #word-input{
         font-family: 'Open Sans', sans-serif;
@@ -78,7 +81,7 @@
 <form method="POST" action="{{ url_for('pages.scramblewg') }}" id="definition-form">
     <div class="center-content" style="display: flex; flex-direction: column; align-items: center;">
         <div class = "vertical-text">
-            <input type="text" name="word" id="word-input" style="width: 300px; height: 50px;">
+            <input type="text" name="word" id="word-input" >
             <input type="button" value="+" style="width: 150px; height: 50px;" id="add-word-button">
         </div>
         <input type="submit" id="play-game-button" value="Play game" style="width: 150px; height: 50px; margin-top: 10px;">
@@ -107,11 +110,9 @@
             count++;
             var newInput = document.createElement("input");
             newInput.type = "text";
-            newInput.style.width = "300px";
-            newInput.style.height = "50px";
-            newInput.style.marginTop = "10px";
-            newInput.style.marginBottom = "10px";
-            newInput.style.fontSize = "35px";
+            // newInput.style.width = "300px";
+            // newInput.style.height = "50px";
+            // newInput.style.fontSize = "35px";
             input.parentNode.insertBefore(newInput, addButton);
             }
     }); 
