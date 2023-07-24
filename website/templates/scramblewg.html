@@ -86,6 +86,7 @@
 </form>
 
 <script>
+    let count = 0;
     var form = document.getElementById("definition-form");
     var input = document.getElementById("word-input");
     var error = document.createElement("p"  );
@@ -100,21 +101,22 @@
             error.style.display = "block";
         }
     });
+ 
     addButton.addEventListener("click", function() {
-        var newInput = document.createElement("input");
-        newInput.type = "text";
-        newInput.style.width = "300px";
-        newInput.style.height = "50px";
-        newInput.style.marginTop = "10px";
-        newInput.style.marginBottom = "10px";
-        newInput.style.fontSize = "35px";
-        
-
-        
-        input.parentNode.insertBefore(newInput, addButton);
-        
-        
+        if(count < 10){
+            count++;
+            var newInput = document.createElement("input");
+            newInput.type = "text";
+            newInput.style.width = "300px";
+            newInput.style.height = "50px";
+            newInput.style.marginTop = "10px";
+            newInput.style.marginBottom = "10px";
+            newInput.style.fontSize = "35px";
+            input.parentNode.insertBefore(newInput, addButton);
+            }
     }); 
+   
+
     document.getElementById("play-game-button").addEventListener("click", function(event) {
         event.preventDefault();
         var words = Array.from(document.querySelectorAll(".vertical-text input[type='text']"))
