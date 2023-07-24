@@ -74,10 +74,8 @@
             clickedElements.forEach((element) => {
               element.style.backgroundColor = "";
             });
-// please write code that will convert the words_json python flask array into a javascript array with same elements
-// please write code that will convert the definitions_json python flask array into a javascript array with same elements
-            //const shuffled_words = {{ words_json }};
-            //const shuffled_definitions = {{ definitions_json }};
+            const shuffled_words = {{ words_json | tojson}};
+            const shuffled_definitions = {{ definitions_json | tojson }};
             
 
             clickedElements = [];
