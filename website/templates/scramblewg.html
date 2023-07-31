@@ -78,15 +78,25 @@
     </style>
     
 </head>
-<form method="POST" action="{{ url_for('pages.scramblewg') }}" id="definition-form">
-    <div class="center-content" style="display: flex; flex-direction: column; align-items: center;">
-        <div class = "vertical-text">
-            <input type="text" name="word" id="word-input" >
-            <input type="button" value="+" style="width: 150px; height: 50px;" id="add-word-button">
+
+<div>
+    <!-- <div class ="alert alert-danger alter-dismissable fade show" role ="alert"> 
+        Can't be more than 10 words
+        <button type ="button" class="close" data-dismiss="alert">
+          <i class='bx bx-x'></i>
+        </button>
+      </div> -->
+      <form method="POST" action="{{ url_for('pages.scramblewg') }}" id="definition-form">
+        <div class="center-content" style="display: flex; flex-direction: column; align-items: center;">
+            <div class = "vertical-text">
+                <input type="text" name="word" id="word-input" >
+                <input type="button" value="+" style="width: 150px; height: 50px;" id="add-word-button">
+            </div>
+            <input type="submit" id="play-game-button" value="Play game" style="width: 150px; height: 50px; margin-top: 10px;">
         </div>
-        <input type="submit" id="play-game-button" value="Play game" style="width: 150px; height: 50px; margin-top: 10px;">
-    </div>
-</form>
+    </form>
+</div>
+
 
 <script>
     let count = 0;
