@@ -71,30 +71,40 @@
 
         if (clickedElements.length === 2) {
           setTimeout(() => {
-            clickedElements.forEach((element) => {
-              element.style.backgroundColor = "";
-            });
-            const shuffled_words = {{ words_json | tojson}};
-            const shuffled_definitions = {{ definitions_json | tojson }};
-            
-
-            clickedElements = [];
+            const shuffled_words = "{{ words_json}}";
+            const shuffled_definitions = "{{ definitions_json}}";
+            const definitions_words = "{{def_word_json}}"
+            const word = clickedElements[0].innerHTML;
+            const definition = clickedElements[1].innerHTML;
             for (let i = 0; i < shuffled_words.length; i++) {
-              if (shuffled_words[i] === clickedElements[0].innerHTML) {
-                if (shuffled_definitions[i] === clickedElements[1].innerHTML) {
-                  clickedElements[0].style.backgroundColor = "green";
-                  clickedElements[1].style.backgroundColor = "green";
-                } else {
-                  clickedElements[0].style.backgroundColor = "red";
-                  clickedElements[1].style.backgroundColor = "red";
-                }
+              if (shuffled_words[i] === word) {
+                let c_word = shuffled_words[i];
+                
+              }
+              if (shuffled_definitions[i] === definition) {
+                let c_definition = shuffled_definitions[i];
+                
               }
             }
-          }, 1000);
+            for(let i = 0; i<shuffled_words.length; i++){
+              if
+
+            }
+            clickedElements.forEach((element) => {
+              
+
+              clickedElements = [];
+
+            
+            });
+          }
+          , 1000);
         }
       });
     });
   });
+
+  
 </script>
 {% endblock %}
 

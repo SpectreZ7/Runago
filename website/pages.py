@@ -7,6 +7,7 @@ from .wordmethods.scramblesentence import scramble_word
 from .wordmethods.definitionsextract import definition_extract
 import random
 import numpy as np
+import json
 
 
 pages = Blueprint('pages',__name__)
@@ -60,43 +61,22 @@ def scrambleplay():
         
         shuffled_definitions = scrambled_definitions.copy()
         shuffled_words = words.copy()
-        def_word_tup = list(zip(shuffled_definitions, shuffled_words))
-        def_words_tup = list(zip(words, definitions))
+        def_word = dict(zip(shuffled_definitions, shuffled_words))
         
+
         
 
         random.shuffle(shuffled_definitions)
         random.shuffle(shuffled_words)
 
         
-        words_json = jsonify(shuffled_words)
-        definitions_json = jsonify(shuffled_definitions)
-        def_word_json = jsonify(def_word) 
-        print(def_words)   
-        print(def_word)    
-
-        # q:are there any issues in this project, because i am getting a TypeError: Object of type Response is not JSON serializable
-        # a: the issue is that you are trying to jsonify a list of tuples, which is not possible. You can only jsonify a dictionary or a list of dictionaries.
-        # q: how do i fix it
-        # a: you can use the zip function to combine the words and definitions into a list of dictionaries, and then jsonify the list of dictionaries.
-        # q: I thought the zip function automatically makes them into tuples, how do i put it into a list of dictionaries?
-        # a: you can use the list function to convert the zip object into a list.
-        # q: did i not do that here?
-        # a: you did, but you are trying to jsonify the list of tuples, which is not possible. You can only jsonify a dictionary or a list of dictionaries.
-        # q: is this wrong? : def_word = list(zip(shuffled_definitions, shuffled_words))
-        # a: yes, you are trying to jsonify a list of tuples, which is not possible. You can only jsonify a dictionary or a list of dictionaries.
-        # q: but list(zip(shuffled_definitions, shuffled_words)) is a list of dictionaries, right?
-        # a: no, it is a list of tuples. You can only jsonify a dictionary or a list of dictionaries.
-        # q: give me the code to fix it
-        
-
-        
-
-
-
-        
-
-        return render_template("scrambleplay.html", scrambled_definitions=scrambled_definitions, words=words, user=current_user, enumerate=enumerate, shuffled_definitions=shuffled_definitions, shuffled_words=shuffled_words,words_json=words_json, definitions_json=definitions_json, def_word_json=def_word_json, def_word=def_word)
+        words_json = json.dumps(shuffled_words)
+        definitions_json = json.dumps(shuffled_definitions)
+        def_word_json = json.dumps(def_word) 
+        print(words_json)   
+        print(definitions_json)    
+        print(def_word_json)    
+        return render_template("scrambleplay.html", scrambled_definitions=scrambled_definitions, words=words, user=current_user, enumerate=enumerate, shuffled_definitions=shuffled_definitions, shuffled_words=shuffled_words, words_json=words_json, definitions_json=definitions_json, def_word_json=def_word_json, def_word=def_word)
 
 @pages.route('/crosswordg', methods=['GET', 'POST'])
 def crosswordg():
