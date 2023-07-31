@@ -63,16 +63,16 @@ def scrambleplay():
         shuffled_words = words.copy()
         def_word = dict(zip(shuffled_definitions, shuffled_words))
         
+        
+        
+        
+        random.shuffle(shuffled_definitions)    
+        random.shuffle(shuffled_words)   
 
         
-
-        random.shuffle(shuffled_definitions)
-        random.shuffle(shuffled_words)
-
-        
-        words_json = json.dumps(shuffled_words)
-        definitions_json = json.dumps(shuffled_definitions)
-        def_word_json = json.dumps(def_word) 
+        words_json = json.dumps(words) 
+        definitions_json = json.dumps(definitions)  
+        def_word_json = json.dumps(def_word)  
         print(words_json)   
         print(definitions_json)    
         print(def_word_json)    
