@@ -8,6 +8,7 @@ from .wordmethods.definitionsextract import definition_extract
 import random
 import numpy as np
 import json
+from .wordmethods.matchdef import checkdef, checkword, check_correct
 
 
 pages = Blueprint('pages',__name__)
@@ -72,19 +73,26 @@ def scrambleplay():
         
         words_json = json.dumps(words) 
         definitions_json = json.dumps(definitions)  
-        def_word_json = json.dumps(def_word)  
-        print(words_json)   
-        print(definitions_json)    
-        print(def_word_json)    
+        def_word_json = json.dumps(def_word)   
         return render_template("scrambleplay.html", scrambled_definitions=scrambled_definitions, words=words, user=current_user, enumerate=enumerate, shuffled_definitions=shuffled_definitions, shuffled_words=shuffled_words, words_json=words_json, definitions_json=definitions_json, def_word_json=def_word_json, def_word=def_word)
+@pages.route('/scrambleprocess', methods = ['POST'])
+def scrambleprocess():
+  data = request.json('data')
+  definition = data[0]
+  word = data[1]
+  check_word = checkword(word)
+  check_def = checkdef(def)
+ 
+ 
 
-@pages.route('/crosswordg', methods=['GET', 'POST'])
-def crosswordg():
-    if request.method == 'POST':
-        words = request.form.getlist('word') # Retrieve the values of the form field 'word' as a list
-        definitions = [get_definition(word) for word in words]
-        return render_template("crosswordgenerator.html", user=current_user, definitions=definitions, words = words)
-    return render_template("flashcardswg.html", user=current_user)
+
+ @pages.route('/crosswordg', methods=['GET', 'POST'])
+ def crosswordg():
+     if request.method == 'POST':    
+         words = request.form.getlist('word') # Retrieve the values of the form field 'word' as a list
+         definitions = [get_definition(word) for word in words]
+         return render_template("crosswordgenerator.html", user=current_user, definitions=definitions, words = words)
+     return render_template("flashcardswg.html", user=current_user)
 
 @pages.route('/crosswordgenerator', methods=['GET', 'POST'])
 def crosswordgenerator():

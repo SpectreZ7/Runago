@@ -71,28 +71,35 @@
 
         if (clickedElements.length === 2) {
           setTimeout(() => {
-            const shuffled_words = "{{ words_json}}";
+            <!-- const shuffled_words = "{{ words_json}}";
             const shuffled_definitions = "{{ definitions_json}}";
-            const definitions_words = "{{def_word_json}}"
+            const definitions_words = "{{def_word_json}}" -->
             const word = clickedElements[0].innerHTML;
             const definition = clickedElements[1].innerHTML;
-            for (let i = 0; i < shuffled_words.length; i++) {
-              if (shuffled_words[i] === word) {
-                let c_word = shuffled_words[i];
-                
-              }
-              if (shuffled_definitions[i] === definition) {
-                let c_definition = shuffled_definitions[i];
-                
-              }
-            }
-            for(let i = 0; i<shuffled_words.length; i++){
-              if
+            const data = new Array[definition, word]
+            let mistakes = 0;
+            $.ajax({
+              url: '/scrambleprocess',
+              type: 'POST',
+              data: { 'data': data },
+                success: function(response) {
+                  if(response == True){
+                    
+                  }
+                  else{
+                    mistakes ++;
 
-            }
+                  }
+
+              },
+              error: function(error) {
+                  console.log(error);
+              }
+          });
+            
             clickedElements.forEach((element) => {
               
-
+              
               clickedElements = [];
               
             

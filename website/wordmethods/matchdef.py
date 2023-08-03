@@ -20,8 +20,15 @@ def checkdef(definition, shuffled_definitions):
         if shuffled_definitions[i] == definition:
             return i
 shuffled_words = ["king", "glass", "brave", "idiot", "pathetic", "desk"]
-shuffled_definitions = ["lmea ahconrm fo a ajomr itteloarirr tnui", "or siwgonh nmelta or lmrao tstrengh to caef rngdae arfe or ifytifclud haingv or hgoswin uoegarc erguoca", "oflhosi ro pdusit rponse", "a pciycaat to vemo noe ot erthie ocmopaeisnsat nspmcoaotasei ro ouptecnsmtuo tiyp", "altbe frema or acse hwti a songilp or ohoirtnazl asercuf lcaiyeepls fro gtriniw dna eanrdgi nda oetfn htwi arsdwre terocstpmamn nad ihooegneslp"]
-testword = checkword("pathetic",shuffled_words)
-testdef = checkdef("or siwgonh nmelta or lmrao tstrengh to caef rngdae arfe or ifytifclud haingv or hgoswin uoegarc erguoca",shuffled_definitions)
-def check_correct(string):
-    if string == 
+shuffled_definitions = ["lmea ahconrm fo a ajomr itteloarirr tnui", "", "or siwgonh nmelta or lmrao tstrengh to caef rngdae arfe or ifytifclud haingv or hgoswin uoegarc erguoca", "oflhosi ro pdusit rponse", "a pciycaat to vemo noe ot erthie ocmopaeisnsat nspmcoaotasei ro ouptecnsmtuo tiyp", "altbe frema or acse hwti a songilp or ohoirtnazl asercuf lcaiyeepls fro gtriniw dna eanrdgi nda oetfn htwi arsdwre terocstpmamn nad ihooegneslp"]
+testword = checkword("idiot",shuffled_words)
+testdef = checkdef("oflhosi ro pdusit rponse",shuffled_definitions)
+def check_correct(index1, index2):
+    if index1 == index2:
+        return True
+    else:
+        return False 
+print(testword)
+print(testdef)
+check = check_correct(testword, testdef)
+print(check)
