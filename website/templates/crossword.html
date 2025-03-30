@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block title %} crossword {% endblock %}
+{% block content %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Crossword</title>
+<style type="text/css">
+#crossword {
+    text-align:center;
+}
+body {
+    padding-top: 70px; /* Adjust this value as needed */
+}
+.crossword {
+    border-collapse:collapse;
+    font-family:"Courier New", Courier, monospace;
+    margin: 20px auto;
+}
+
+.crossword td {
+    border: 2px solid #d10707;
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    text-align: center;
+    position: relative; /* For positioning the number */
+}
+.crossword td input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    text-align: center;
+    font-size: 20px;
+    background-color: transparent; /* Or a light color for visibility */
+    color: rgb(13, 124, 183);
+}
+
+.crossword .no-border {
+    border:none;
+}
+
+#clues {
+    margin:auto;
+    max-width: 800px;
+}
+#clues th {
+    text-align: left;
+    padding-bottom: 10px;
+}
+#clues ul {
+    list-style-type: none;
+    padding: 0;
+}
+#clues td {
+    vertical-align:top;
+}
+#clues li {
+    padding: 5px 0;
+}
+/* Positioning the number in the top-left corner */
+.crossword-cell::before {
+    content: attr(data-number);
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    font-size: 10px;
+    color: rgb(225, 7, 7);
+}
+.custom-alert {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    border: 1px solid rgba(var(--clr-accent-1-rgb), 0.5);
+}
+
+.custom-alert.hidden {
+    display: none;
+}
+
+.custom-alert-content {
+    background-color: rgb(7, 7, 7);
+    padding: 20px;
+    border-radius: 7px;
+    text-align: center;
+}
+
+.custom-alert-message {
+    margin-bottom: 20px;
+    color: 1px solid rgba(var(--clr-accent-1-rgb), 0.5);
+}
+#validate_answers {
+    background-color: #560eb5;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    font-size: 16px;
+    margin-top: 20px;
+}
+</style>
+<script type="text/javascript" src="{{ url_for('static', filename='crossword.js') }}"></script>
+<script type="text/javascript">
+window.onload = function(){
+    {}
+    // words[i] correlates to clues[i]
+    
+    var dataContainer = document.getElementById("data-container");
+    console.log(dataContainer.getAttribute("data-words"));
+    console.log(dataContainer.getAttribute("data-extracted-definitions"));
+    var words = {{words | tojson | safe}};
+    var clues = {{extracted_definitions | tojson | safe}};
+ 
+
+    // Create crossword object with the words and clues
+    var cw = new Crossword(words, clues);
+
+    // create the crossword grid (try to make it have a 1:1 width to height ratio in 10 attempts)
+    var tries = 10; 
+    var grid = cw.getSquareGrid(tries);
+
+    // report a problem with the words in the crossword
+    if(grid == null){
+        var bad_words = cw.getBadWords();
+        var str = [];
+        for(var i = 0; i < bad_words.length; i++){
+            str.push(bad_words[i].word);
+        }
+        alert("Shoot! A grid could not be created with these words:\n" + str.join("\n"));
+        return;
+    }
+
+    // turn the crossword grid into HTML
+    var show_answers = false;
+    document.getElementById("crossword").innerHTML = CrosswordUtils.toHtml(grid, show_answers);
+
+    // make a nice legend for the clues
+    var legend = cw.getLegend(grid);
+    addLegendToPage(legend);
+};
+
+function addLegendToPage(groups){
+    for(var k in groups){
+        var html = [];
+        for(var i = 0; i < groups[k].length; i++){
+            html.push("<li><strong>" + groups[k][i]['position'] + ".</strong> " + groups[k][i]['clue'] + "</li>");
+        }
+        document.getElementById(k).innerHTML = html.join("\n");
+    }
+}
+function moveToNextInput(currentInput) {
+    var currentTd = currentInput.parentElement;
+    var nextTd = currentTd.nextElementSibling || currentTd.parentElement.nextElementSibling?.firstElementChild;
+    
+    if (nextTd && nextTd.querySelector('input')) {
+        nextTd.querySelector('input').focus();
+    }
+}
+
+function setupInputBehavior() {
+    var inputs = document.querySelectorAll('.crossword-input');
+    inputs.forEach(function(input) {
+        input.addEventListener('input', function() {
+            if (this.value.length === this.maxLength) {
+                moveToNextInput(this);
+            }
+        });
+    });
+}
+function showCustomAlert(message) {
+    document.querySelector('.custom-alert-message').textContent = message;
+    document.getElementById('customAlert').classList.remove('hidden');
+}
+
+function closeCustomAlert() {
+    document.getElementById('customAlert').classList.add('hidden');
+}
+
+
+// Call this function after the grid is generated
+setupInputBehavior();
+function validateCrossword() {
+    var inputs = document.querySelectorAll('.crossword-input');
+    var isCorrect = true;
+
+    inputs.forEach(function(input) {
+        var correctChar = input.getAttribute('data-correct');
+        if (input.value !== correctChar) {
+            isCorrect = false;
+            
+        } else {
+            input.style.backgroundColor = 'green';
+        }
+    });
+
+    if (isCorrect) {
+        showCustomAlert("Congratulations! You have completed the crossword correctly.");
+        fetch("/complete", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          window.location.href = "/complete"
+        }
+
+    
+    else {
+        showCustomAlert("Not quite right, please try again");
+
+    }
+}
+
+
+</script>
+
+</head>
+
+<body> 
+    <div id="data-container" data-words="{{ words | tojson | safe }}" data-extracted-definitions="{{ extracted_definitions | tojson | safe }}"></div>
+    <div id="crossword"></div>
+    <table id="clues">
+        <thead>
+            <tr>
+                <th>Across</th>
+                <th>Down</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><ul id="across"></ul></td>
+                <td><ul id="down"></ul></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button id ="validate_answers" onclick="validateCrossword()">Check Answers</button>
+    <div id="customAlert" class="custom-alert hidden">
+        <div class="custom-alert-content">
+            <span class="custom-alert-message">Your message here</span>
+            <button onclick="closeCustomAlert()">Close</button>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

@@ -56,13 +56,15 @@
     justify-content: center;
     }
     input[type="submit"] {
-        background-color: #ff0000;
+        background-color: #282f70;
         color: white;
         padding: 8px 16px;
         border-radius: 20px;
         border: none;
         font-size: 16px;
         cursor: pointer;
+        font-weight:bold ;
+        font-family: 'Roboto', sans-serif;
     }
     #add-word-button{
         background-color: #ff0000;
@@ -75,30 +77,110 @@
         cursor: pointer;
 
     }
+    .difficulty-selection {
+        position: absolute;
+        left: 30px; 
+        top: 20%;  
+        transform: translateY(175%);
+        border-radius: 10px;
+        padding: 20px;
+        background-color: #282f70;
+        font-size: 16px;
+        cursor: pointer;
+        font-weight:bold ;
+        font-family: 'Roboto', sans-serif;
+    }
+    .difficulty-selection label {
+        display: block; /* Makes each label occupy its own line */
+        color: white; /* Example text color to match your navbar */
+        background-color: #282f70;
+        margin: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border-radius: 5px;
+    }
+    .difficulty-selection input[type="radio"] {
+        accent-color: #3498db; 
+        margin-right: 8px;
+        opacity: 0;
+        position: absolute;
+        width: 0;
+        height: 0;
+    }
+
+    .center-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh; /* Full viewport height */
+    }
+
+    #definition-form {
+        position: absolute;
+        top: 50%; /* Adjust as needed to lower the form */
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .vertical-text {
+        max-height: 70vh; /* Adjust based on screen size */
+        overflow-y: auto; /* Enables scrolling */
+    }
+
     </style>
     
 </head>
 
 <div>
-    <!-- <div class ="alert alert-danger alter-dismissable fade show" role ="alert"> 
-        Can't be more than 10 words
-        <button type ="button" class="close" data-dismiss="alert">
-          <i class='bx bx-x'></i>
-        </button>
-      </div> -->
-      <form method="POST" action="{{ url_for('pages.scramblewg') }}" id="definition-form">
-        <div class="center-content" style="display: flex; flex-direction: column; align-items: center;">
-            <div class = "vertical-text">
-                <input type="text" name="word" id="word-input" >
-                <input type="button" value="+" style="width: 150px; height: 50px;" id="add-word-button">
-            </div>
-            <input type="submit" id="play-game-button" value="Play game" style="width: 150px; height: 50px; margin-top: 10px;">
+    <div>
+        <!-- Difficulty Selection on the left -->
+        <div class="difficulty-selection" style="position: absolute; left: 10px; top: 10px;">
+            <label><input type="radio" name="difficulty" value="easy"> Easy (7 Words)</label><br>
+            <label><input type="radio" name="difficulty" value="medium"> Medium (12 Words)</label><br>
+            <label><input type="radio" name="difficulty" value="hard"> Hard (17 Words)</label>
         </div>
-    </form>
+    
+        <!-- Form with input fields in the center -->
+        <form method="POST" action="{{ url_for('pages.scramblewg') }}" id="definition-form">
+            <div class="center-content" style="display: flex; flex-direction: column; align-items: center;">
+                <div class="vertical-text" id="word-inputs">
+                    <!-- Input fields will be added here based on difficulty -->
+                </div>
+                <input type="submit" id="play-game-button" value="Play game" style="width: 150px; height: 50px; margin-top: 10px;">
+            </div>
+        </form>
+    </div>
 </div>
 
 
 <script>
+    // Function to create input fields based on difficulty
+    function createInputFields(numberOfFields) {
+        const container = document.getElementById("word-inputs");
+        container.innerHTML = ''; // Clear existing fields if any
+        for (let i = 0; i < numberOfFields; i++) {
+            var newInput = document.createElement("input");
+            newInput.type = "text";
+            // Apply any required styles to newInput if needed
+            container.appendChild(newInput);
+        }
+    }
+    // Event listener for difficulty selection
+    document.querySelectorAll('input[name="difficulty"]').forEach(input => {
+        input.addEventListener('change', function() {
+            if (this.value === 'easy') {
+                createInputFields(7);
+            } else if (this.value === 'medium') {
+                createInputFields(12);
+            } else if (this.value === 'hard') {
+                createInputFields(17);
+            }
+        });
+    });
+
     let count = 0;
     var form = document.getElementById("definition-form");
     var input = document.getElementById("word-input");
@@ -108,24 +190,17 @@
     error.style.display = "none";
     var addButton = document.getElementById("add-word-button");
     form.addEventListener("submit", function(e) {
-        if (input.value === "") {
-            e.preventDefault();
-            input.parentNode.insertBefore(error, input.nextSibling);
-            error.style.display = "block";
+        var inputs = document.querySelectorAll("#word-inputs input[type='text']");
+        for (var input of inputs) {
+            if (input.value === "") {
+                e.preventDefault();
+                // You can show an error message if needed
+                break;
+            }
         }
     });
  
-    addButton.addEventListener("click", function() {
-        if(count < 9){
-            count++;
-            var newInput = document.createElement("input");
-            newInput.type = "text";
-            // newInput.style.width = "300px";
-            // newInput.style.height = "50px";
-            // newInput.style.fontSize = "35px";
-            input.parentNode.insertBefore(newInput, addButton);
-            }
-    }); 
+    
    
 
     document.getElementById("play-game-button").addEventListener("click", function(event) {

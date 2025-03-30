@@ -4,7 +4,20 @@ import re
 from .scramblesentence import scramble_word
 from flask import Blueprint,render_template
 
-
+def clean_definition(definition):
+    # Remove parts like {d_link|rudimentary|rudimentary}
+    #find all occurrences of the {d_link|...} pattern.
+    #regex that matches strings starting with {d_link|, followed by any characters except }, then another |, and captures whatever follows until the next }
+    #The replacement r"\1" replaces the entire matched string with just the captured part (what's inside the parentheses in the regex), 
+    # effectively removing the {d_link|...|...} part and keeping the last term.
+    
+    definition = re.sub(r"\{d_link\|[^}]*\|([^}]*)\}", r"\1", definition)
+    
+    # removes any remaining content within curly braces {}
+    #Remove parts like {bc}
+    definition = re.sub(r"\{[^}]*\}", "", definition)
+    
+    return definition.strip()
 
 def get_definition(word):
     endpoint = "https://dictionaryapi.com/api/v3/references/collegiate/json/"
@@ -28,20 +41,10 @@ def get_definition(word):
                     # Access the nested structure to retrieve the definition
                     definition = response_dict[0]['def'][0]['sseq'][0][0][1]['dt'][0][1]
                     
-                    # Perform additional processing on the definition using regular expressions
-                    c = re.search("^{bc}", definition)
-                    d = re.search(".*{d_link", definition)
+                    # Use the clean_definition function to clean up the definition
+                    cleaned_definition = clean_definition(definition)
                     
-                    if c:
-                        # Remove "{bc}" from the definition if it matches at the beginning
-                        definition = re.sub("{bc}", "", definition)
-                        return definition
-                    elif d:
-                        # Remove "{d_link|" from the definition if it matches anywhere
-                        re.sub("{d_link|", "", definition)
-                        return definition
-                    else:
-                        return definition
+                    return cleaned_definition
 
     return ""
 

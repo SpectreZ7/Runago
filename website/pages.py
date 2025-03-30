@@ -9,7 +9,13 @@ import random
 import numpy as np
 import json
 from .wordmethods.matchdef import checkdef, checkword, check_correct
-
+from flask import Blueprint, render_template, request, flash, redirect, url_for
+from .models import User
+from werkzeug.security import generate_password_hash, check_password_hash
+from . import db
+from flask_login import login_user,  login_required, logout_user, current_user
+from .models import LearnedWord
+import copy
 
 pages = Blueprint('pages',__name__)
 @pages.route('/')
@@ -38,7 +44,11 @@ def scramblewg():
 
 @pages.route('/library')
 def library():
-    return render_template("library.html", user = current_user)
+    learned_words = LearnedWord.query.filter_by(user_id=current_user.id).all()
+    Users = User.query.all()
+    Users_id = current_user.id
+    print(Users_id)
+    return render_template("library.html", user = current_user, learned_words=learned_words, Users = Users, Users_id = Users_id)
 
 
 @pages.route('/scrambleplay', methods=['GET', 'POST'])
@@ -47,80 +57,83 @@ def scrambleplay():
         words = request.json
         session["words"] = words  # Store words in session
         #When a POST request is received, the JSON data from the request is stored in the session using session["words"].
-        definitions = {}
-        for i in words:
-            definitions[i] = get_definition(i)
-        extracted_definitions = definition_extract(definitions)
+        definitions = {word: get_definition(word) for word in words}
+        extracted_definitions = definition_extract(definitions, words)
+        print(extracted_definitions)
         scrambled_definitions = [scramble_word(definition) for definition in extracted_definitions]
+        print(scrambled_definitions)
+
         session["scrambled_definitions"] = scrambled_definitions  # Store scrambled definitions in session
-        return jsonify(scrambled_definitions=scrambled_definitions) 
+        return  jsonify(scrambled_definitions=scrambled_definitions)
     else:
         words = session.get("words", [])  # Retrieve words from session
         #When a GET request is received, the words are retrieved from the session using session.get().
-        definitions = [get_definition(word) for word in words]
-        scrambled_definitions = session.get("scrambled_definitions", [])  # Retrieve scrambled definitions from session
-        
+        definitions = [get_definition(word) for word in words]       
+        scrambled_definitions = session.get("scrambled_definitions", [])
+        print(definitions)
+        print(scrambled_definitions)
+        print(words)  
         shuffled_definitions = scrambled_definitions.copy()
-        shuffled_words = words.copy()
-        def_word = dict(zip(shuffled_definitions, shuffled_words))
-        
-        
-        
-        
-        random.shuffle(shuffled_definitions)    
-        random.shuffle(shuffled_words)   
+        random.shuffle(shuffled_definitions)
 
-        
-        words_json = json.dumps(words) 
-        definitions_json = json.dumps(definitions)  
-        def_word_json = json.dumps(def_word)   
-        return render_template("scrambleplay.html", scrambled_definitions=scrambled_definitions, words=words, user=current_user, enumerate=enumerate, shuffled_definitions=shuffled_definitions, shuffled_words=shuffled_words, words_json=words_json, definitions_json=definitions_json, def_word_json=def_word_json, def_word=def_word)
+
+        session["shuffled_definitions"] = shuffled_definitions
+        session["definitions"] = definitions
+        return render_template("scrambleplay.html", scrambled_definitions=scrambled_definitions, words=words, user=current_user, enumerate=enumerate, shuffled_definitions=shuffled_definitions)
+
 @pages.route('/scrambleprocess', methods = ['POST'])
 def scrambleprocess():
-  data = request.json('data')
-  definition = data[0]
-  word = data[1]
-  check_word = checkword(word)
-  check_def = checkdef(def)
- 
+    words = session.get("words", [])
+    definitions = session.get("definitions", [])
+    shuffled_definitions = session.get("shuffled_definitions", [])
+    scrambled_definitions = session.get("scrambled_definitions", [])
+    data = request.json.get('data')
+    word = data[0].strip()
+    definition = data[1].strip()
+    print(data)
+    print(word, definition)
+    print(words, shuffled_definitions)
+    print(scrambled_definitions)
+    clicked_word_index = checkword(word, words)
+    clicked_def_index = checkdef(definition, scrambled_definitions)
+    print(definitions)
+    print(clicked_word_index, clicked_def_index)
+    match = check_correct(clicked_word_index, clicked_def_index)
+    print(match)
+     # Check if the word's correct definition matches the selected definition
  
 
+    return jsonify(match=match)
+  
 
- @pages.route('/crosswordg', methods=['GET', 'POST'])
- def crosswordg():
+@pages.route('/crosswordg', methods=['GET', 'POST'])
+def crosswordg():
      if request.method == 'POST':    
          words = request.form.getlist('word') # Retrieve the values of the form field 'word' as a list
-         definitions = [get_definition(word) for word in words]
-         return render_template("crosswordgenerator.html", user=current_user, definitions=definitions, words = words)
-     return render_template("flashcardswg.html", user=current_user)
+         definitions = [definition_extract(get_definition(word)) for word in words]
 
-@pages.route('/crosswordgenerator', methods=['GET', 'POST'])
-def crosswordgenerator():
+         return render_template("crosswordgenerator.html", user=current_user, definitions=definitions, words = words)
+     return render_template("crosswordg.html", user=current_user)
+
+@pages.route('/crossword', methods=['GET', 'POST'])
+def crossword():
     if request.method == 'POST':
         words = request.json # Retrieve the JSON data from the request body
-        if request.is_json:
-            print(words)
         session["words"] = words
         definitions = {}
         for i in words:
             definitions[i] = get_definition(i)
-        extracted_definitions = definition_extract(definitions)
-        scrambled_definitions = [scramble_word(definition) for definition in extracted_definitions]
-        session["scrambled_definitions"] = scrambled_definitions  # Store scrambled definitions in session
-        return jsonify(scrambled_definitions=scrambled_definitions) 
+        extracted_definitions = definition_extract(definitions, words)
+        session["extracted_definitions"] = extracted_definitions
+        #print(extracted_definitions)
+        #print(words)
+        return jsonify( extracted_definitions = extracted_definitions,words = words)
     else:
         words = session.get("words", [])        
         definitions = [get_definition(word) for word in words]
-        scrambled_definitions = session.get("scrambled_definitions", [])  # Retrieve scrambled definitions from session
-        shuffled_definitions = scrambled_definitions.copy()
-        shuffled_words = words.copy()
-        random.shuffle(shuffled_definitions)
-        random.shuffle(shuffled_words)
-        def_word = np.array([shuffled_definitions, shuffled_words])
-        def_words = np.array([words, definitions])
-        print(def_words)
-        print(def_word)
-        return render_template("scrambleplay.html", scrambled_definitions=scrambled_definitions, words=words, user=current_user, enumerate=enumerate, shuffled_definitions=shuffled_definitions, shuffled_words=shuffled_words)
+        extracted_definitions = session.get("extracted_definitions", [])  # Retrieve scrambled definitions from session
+        return render_template("crossword.html", words=words, user=current_user, enumerate=enumerate, extracted_definitions=extracted_definitions)
+
 
 @pages.route('/flashcards_generator', methods=['GET', 'POST'] )
 def flashcards_generator():
@@ -132,14 +145,17 @@ def flashcards_generator():
         definitions = {}
         for i in words:
             definitions[i] = get_definition(i)
-        extracted_definitions = definition_extract(definitions)
+        extracted_definitions = definition_extract(definitions, words)
 
         return jsonify(extracted_definitions = extracted_definitions) 
     else:
         words = session.get("words", [])        
         definitions = [get_definition(word) for word in words]
         extracted_definitions = session.get("extracted_definitions", [])  # Retrieve extracted definitions from session
-        return render_template("flashcards_generator.html", words=words, extracted_definitions=extracted_definitions ,user=current_user, enumerate=enumerate)
+        word_definitions = [{"word": word, "definition": get_definition(word)} for word in words]
+        return render_template("flashcards_generator.html",word_definitions=word_definitions, words=words, extracted_definitions=extracted_definitions ,user=current_user, enumerate=enumerate)
+
+
 
 @pages.route('/flashcardswg' , methods=['GET', 'POST'])
 def flashcardswg():
@@ -148,3 +164,17 @@ def flashcardswg():
         definitions = [get_definition(word) for word in words]
         return render_template("flashcards_generator.html", user=current_user, definitions=definitions, words = words)
     return render_template("flashcardswg.html", user=current_user)
+
+
+@pages.route('/complete', methods =['GET', 'POST'])
+@login_required
+def complete():
+    if request.method == "POST":
+        words = session.get("words", [])
+        definitions = [get_definition(word) for word in words]
+        for(word, definitions) in zip(words, definitions):
+            new_word = LearnedWord(user_id=current_user.id, word=word, definition=definitions)
+            db.session.add(new_word)
+            db.session.commit()
+
+    return render_template("complete.html", user=current_user)

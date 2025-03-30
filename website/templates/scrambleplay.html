@@ -1,20 +1,17 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <style>
-  .container{
+  .container {
     margin-top: 100px !important;
   }
-  .words_defs{
-    font-family: 'Open Sans', sans-serif;
+  .words_defs {
+    font-family: "Open Sans", sans-serif;
     text-align: center;
-
   }
-  th{
+  th {
     height: 70px;
     color: rgb(255, 255, 255);
   }
-  .table{
+  .table {
     text-align: center;
     position: absolute;
     top: 50%;
@@ -23,97 +20,115 @@
     font-size: 25px;
     border: 1px solid;
   }
-  .table, th, td{
+  .table,
+  th,
+  td {
     border: 2px solid;
     background-color: rgb(0, 0, 0);
   }
-  #definitions{
-    color:rgb(201, 11, 11);
+  #definitions {
+    color: rgb(201, 11, 11);
   }
-  #words{
-    color:rgb(59, 11, 201);
+  #words {
+    color: rgb(59, 11, 201);
   }
 </style>
 
-<div class="container" style="background-color:black;">
-  <div class="scrambleplay" style="background-color: black;">
-    <table class="table" style="margin-top: 60px;">
+<div class="container" style="background-color: black">
+  <div class="scrambleplay" style="background-color: black">
+    <table class="table" style="margin-top: 60px">
       <thead>
         <tr>
           <th>Word</th>
           <th>Definition</th>
         </tr>
-      </thead>  
+      </thead>
       <tbody>
         {% for i, scrambled_definition in enumerate(shuffled_definitions) %}
         <tr>
-          <td class="words_defs" id="words">{{ shuffled_words[i] }}</td>
-          <td class="words_defs" id="definitions">{{ scrambled_definition }}</td>   
+          <td class="word" id="words">{{ words[i] }}</td>
+          <td class="definitions" id="definitions">
+            {{ shuffled_definitions[i] }}
+          </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
   let clickedElements = [];
-
+  let num = 1;
+  let mistakes = 0;
+  
   document.addEventListener("DOMContentLoaded", function () {
     const tableCells = document.querySelectorAll("td");
-
+    const tclength = tableCells.length / 2;
+  
     tableCells.forEach((cell) => {
       cell.addEventListener("click", function () {
         if (clickedElements.length < 2 && !clickedElements.includes(cell)) {
           clickedElements.push(cell);
-          cell.style.backgroundColor = "rgba(255,255,255, 1)";
+          cell.style.backgroundColor = "rgba(255,255,255,1)";
         }
-        
-
+  
         if (clickedElements.length === 2) {
-          setTimeout(() => {
-            <!-- const shuffled_words = "{{ words_json}}";
-            const shuffled_definitions = "{{ definitions_json}}";
-            const definitions_words = "{{def_word_json}}" -->
-            const word = clickedElements[0].innerHTML;
-            const definition = clickedElements[1].innerHTML;
-            const data = new Array[definition, word]
-            let mistakes = 0;
-            $.ajax({
-              url: '/scrambleprocess',
-              type: 'POST',
-              data: { 'data': data },
-                success: function(response) {
-                  if(response == True){
-                    
-                  }
-                  else{
-                    mistakes ++;
-
-                  }
-
-              },
-              error: function(error) {
-                  console.log(error);
+          // Identify the word and definition based on the class name
+          let word, definition;
+  
+          if (clickedElements[0].classList.contains("word")) {
+            word = clickedElements[0].innerHTML.trim();
+            definition = clickedElements[1].innerHTML.trim();
+          } else {
+            word = clickedElements[1].innerHTML.trim();
+            definition = clickedElements[0].innerHTML.trim();
+          }
+  
+          // AJAX request
+          $.ajax({
+            url: "/scrambleprocess",
+            type: "POST",
+            data: JSON.stringify({ data: [word, definition] }),
+            contentType: "application/json",
+            success: function (response) {
+              if (response.match === true) {
+                  clickedElements.forEach((element) => {
+                  element.style.backgroundColor = "rgba(0,128,0)";
+                });
+                num++;
+              } 
+              else {
+                mistakes++;
+                console.log("Mistakes: " + mistakes);
+                clickedElements.forEach((element) => {
+                  element.style.backgroundColor = "rgba(255,255,255, 0)";
+                });
               }
-          });
-            
-            clickedElements.forEach((element) => {
-              
               
               clickedElements = [];
-              
-            
+            },
+            error: function (error) {
+              console.log(error);
+            },
+          });
+  
+          // Check for game completion
+          if (num === tclength) {
+            fetch("/complete", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }).then(() => {
+              window.location.href = "/complete";
             });
           }
-          , 1000);
         }
       });
     });
   });
-
   
 </script>
 {% endblock %}
-
-
 

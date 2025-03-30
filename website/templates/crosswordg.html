@@ -3,12 +3,15 @@
 {% block content %}
 <head>
     <style>
-    .vertical-text input[type= "text"]{
-        margin-top: 10px;
-    }
+    /* .vertical-text input[type= "text"]{
+        margin-top: 400px;
+    } */
     .vertical-text input{
         display: flex;
-        flex-direction: column;
+        width: 280px;
+        min-height: 20px;
+        font-size: 35px;
+        /* flex-direction: column; */
     }
     #word-input{
         font-family: 'Open Sans', sans-serif;
@@ -24,7 +27,7 @@
     .definition-container p{
         font-family: 'Open Sans', sans-serif;
         font-size: 24px;
-        color: rgb(14, 14, 154);
+        color: rgb(254, 254, 254);
     }
     
     .center-content {
@@ -53,37 +56,133 @@
     justify-content: center;
     }
     input[type="submit"] {
-        background-color: #ff0000;
+        background-color: #282f70;
         color: white;
         padding: 8px 16px;
         border-radius: 20px;
         border: none;
         font-size: 16px;
         cursor: pointer;
+        font-weight:bold ;
+        font-family: 'Roboto', sans-serif;
     }
     #add-word-button{
         background-color: #ff0000;
         color: white;
-        padding: 8px 16px;
+
+        padding: 0px 55px;
         border-radius: 20px;
         border: none;
-        font-size: 16px;
+        font-size: 60px;
         cursor: pointer;
+
     }
+        
+    
+        .difficulty-selection {
+            position: absolute;
+            left: 30px; 
+            top: 20%;  
+            transform: translateY(175%);
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #282f70;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight:bold ;
+            font-family: 'Roboto', sans-serif;
+        }
+        .difficulty-selection label {
+            display: block; /* Makes each label occupy its own line */
+            color: white; /* Example text color to match your navbar */
+            background-color: #282f70;
+            margin: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 5px;
+        }
+        .difficulty-selection input[type="radio"] {
+            accent-color: #3498db; 
+            margin-right: 8px;
+            opacity: 0;
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+    
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Full viewport height */
+        }
+    
+        #definition-form {
+            position: absolute;
+            top: 50%; /* Adjust as needed to lower the form */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .vertical-text {
+            max-height: 70vh; /* Adjust based on screen size */
+            overflow-y: auto; /* Enables scrolling */
+        }
+    
     </style>
     
 </head>
-<form method="POST" action="{{ url_for('pages.scramblewg') }}" id="definition-form">
-    <div class="center-content" style="display: flex; flex-direction: column; align-items: center;">
-        <div class = "vertical-text">
-            <input type="text" name="word" id="word-input" style="width: 300px; height: 50px;">
-            <input type="button" value="+" style="width: 150px; height: 50px;" id="add-word-button">
-        </div>
-        <input type="submit" id="play-game-button" value="Generate Crossword" style="width: 150px; height: 50px; margin-top: 10px;">
+
+<div>
+    <!-- Difficulty Selection on the left -->
+    <div class="difficulty-selection" style="position: absolute; left: 10px; top: 10px;">
+        <label><input type="radio" name="difficulty" value="easy"> Easy (7 Words)</label><br>
+        <label><input type="radio" name="difficulty" value="medium"> Medium (12 Words)</label><br>
+        <label><input type="radio" name="difficulty" value="hard"> Hard (17 Words)</label>
     </div>
-</form>
+
+    <!-- Form with input fields in the center -->
+    <form method="POST" action="{{ url_for('pages.crosswordg') }}" id="definition-form">
+        <div class="center-content" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="vertical-text" id="word-inputs">
+                <!-- Input fields will be added here based on difficulty -->
+            </div>
+            <input type="submit" id="play-game-button" value="Play game" style="width: 150px; height: 50px; margin-top: 10px;">
+        </div>
+    </form>
+</div>
+
+
 
 <script>
+    // Function to create input fields based on difficulty
+    function createInputFields(numberOfFields) {
+        const container = document.getElementById("word-inputs");
+        container.innerHTML = ''; // Clear existing fields if any
+        for (let i = 0; i < numberOfFields; i++) {
+            var newInput = document.createElement("input");
+            newInput.type = "text";
+            // Apply any required styles to newInput if needed
+            container.appendChild(newInput);
+        }
+    }
+    // Event listener for difficulty selection
+    document.querySelectorAll('input[name="difficulty"]').forEach(input => {
+        input.addEventListener('change', function() {
+            if (this.value === 'easy') {
+                createInputFields(7);
+            } else if (this.value === 'medium') {
+                createInputFields(12);
+            } else if (this.value === 'hard') {
+                createInputFields(17);
+            }
+        });
+    });
+
+    let count = 0;
     var form = document.getElementById("definition-form");
     var input = document.getElementById("word-input");
     var error = document.createElement("p"  );
@@ -92,60 +191,61 @@
     error.style.display = "none";
     var addButton = document.getElementById("add-word-button");
     form.addEventListener("submit", function(e) {
-        if (input.value === "") {
-            e.preventDefault();
-            input.parentNode.insertBefore(error, input.nextSibling);
-            error.style.display = "block";
+        var inputs = document.querySelectorAll("#word-inputs input[type='text']");
+        for (var input of inputs) {
+            if (input.value === "") {
+                e.preventDefault();
+                break;
+            }
         }
     });
-    addButton.addEventListener("click", function() {
-        var newInput = document.createElement("input");
-        newInput.type = "text";
-        newInput.style.width = "300px";
-        newInput.style.height = "50px";
-        newInput.style.marginTop = "10px";
-        input.parentNode.insertBefore(newInput, addButton);
-        
-    }); 
+    
+   
+
     document.getElementById("play-game-button").addEventListener("click", function(event) {
         event.preventDefault();
         var words = Array.from(document.querySelectorAll(".vertical-text input[type='text']"))
             .map(function(input) { return input.value.trim(); })
             .filter(function(word) { return word.length > 0; });
         if (words.length > 0) {
-            fetch("/scrambleplay", {
+            // The fetch function initiates an asynchronous HTTP request and returns a Promise. 
+            // The Promise represents the eventual completion or failure of the request.
+            fetch("/crossword", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
+                    // Making a POST request to the "/scrambleplay" endpoint with JSON data.
+                    // The request headers specify the content type as JSON.
                 },
                 body: JSON.stringify(words)
                 
             })
+            // Chain a promise using `then()` to handle the response from the server.
             .then(function(response) {
+                // Handling the response from the server.
                 if (response.ok) {
+                    // Checking if the response was successful (status code 2xx).
                     return response.json();
+                    // Parsing the response body as JSON.
                 } else {
                     throw new Error("Network response was not ok.");
-                }
+                }// Throwing an error if the response was not successful.
             })
+            // Chain another promise using `then()` to handle the parsed JSON data from the previous `then()` callback.
             .then(function(data) {
+                // Handling the parsed JSON data from the response.
                 definitions = {}
-               // console.log(data.scrambled_definitions);
-                Object.keys(data.scrambled_definitions).forEach(word => {
-                    definitions[word] = data.scrambled_definitions[word];
+
+                Object.keys(data.extracted_definitions).forEach(word => {
+                    definitions[word] = data.extracted_definitions[word];
                 });
-                window.location.href = "/crosswordgenerator?definitions=" + encodeURIComponent(JSON.stringify(definitions));
+                window.location.href = "/crossword?definitions=" + encodeURIComponent(JSON.stringify(definitions));
             })
+            // Chain the `catch()` method to handle any errors that occur in the promise chain.
             .catch(function(error) {
                 console.error("Error:", error);
             });
         }
     });
-    
-    
-      
-
-
-
 </script>
 {% endblock %}

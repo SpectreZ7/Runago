@@ -3,74 +3,89 @@
 {% block content %}
 <head>
     <style>
-    .vertical-text input[type= "text"]{
-        margin-top: 80px;
-    }
-    .vertical-text input{
-        display: flex;
-        flex-direction: column;
-    }
-    #word-input{
-        font-family: 'Open Sans', sans-serif;
-        font-size: 35px;
-    }
-    .definition-container {
+        /* .vertical-text input[type= "text"]{
+            margin-top: 400px;
+        } */
+        .vertical-text input{
+            display: flex;
+            width: 280px;
+            min-height: 20px;
+            font-size: 35px;
+            /* flex-direction: column; */
+        }
+        #word-input{
+            font-family: 'Open Sans', sans-serif;
+            font-size: 35px;
+        }
+        .definition-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .definition-container p{
+            font-family: 'Open Sans', sans-serif;
+            font-size: 24px;
+            color: rgb(254, 254, 254);
+        }
+        
+        .center-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+        .error{
+            color:red;
+            font-weight:bold;
+        }
+        input[type="text"] {
+            border-radius: 15px;
+        }
+        #definition-form {
         position: absolute;
-        top: 50%;
-        left: 50%;
+        top: 30%;
+        left: 52%;
         transform: translate(-50%, -50%);
-        text-align: center;
-    }
-    .definition-container p{
-        font-family: 'Open Sans', sans-serif;
-        font-size: 24px;
-        color: rgb(14, 14, 154);
-    }
-    
-    .center-content {
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100%;
-    }
-    body {
-        font-family: 'Open Sans', sans-serif;
-    }
-    .error{
-        color:red;
-        font-weight:bold;
-    }
-    input[type="text"] {
-        border-radius: 15px;
-    }
-    #definition-form {
-    position: absolute;
-    top: 30%;
-    left: 52%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    }
-    input[type="submit"] {
-        background-color: #ff0000;
-        color: white;
-        padding: 8px 16px;
-        border-radius: 20px;
-        border: none;
-        font-size: 16px;
-        cursor: pointer;
-    }
-    #add-word-button{
-        background-color: #ff0000;
-        color: white;
-        padding: 8px 16px;
-        border-radius: 20px;
-        border: none;
-        font-size: 16px;
-        cursor: pointer;
-    }
-    </style>
+        }
+        input[type="submit"] {
+            background-color: #282f70;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight:bold ;
+            font-family: 'Roboto', sans-serif;
+        }
+        #add-word-button{
+            background-color: #282f70;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            font-size: 60px; /* Size of the plus sign */
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Roboto', sans-serif;
+            text-align: center; /* Centers the text horizontally */
+            line-height: 1; /* Adjust this value to center the text vertically */
+            vertical-align: middle; /* Aligns the text vertically */
+            display: flex; /* Use flexbox to center content */
+            justify-content: center; /* Center horizontally for flex items */
+            align-items: center; /* Center vertically for flex items */
+            top:100%
+        }
+        
+        </style>
     
 </head>
 <form method="POST" action="{{ url_for('pages.flashcardswg') }}" id="definition-form">
@@ -131,9 +146,14 @@
             .then(function(data) {
                 definitions = {}
                // console.log(data.scrambled_definitions);
-                Object.keys(data.definitions).forEach(word => {
-                    definitions[word] = data.definitions[word];
-                });
+                console.log(data) 
+                if (data && data.definitions){
+                    Object.keys(data.definitions).forEach(word => {
+                        definitions[word] = data.definitions[word];
+                    });
+                } else {
+                    console.error("data or data.definitions is undefined:", data);
+                }
                 window.location.href = "/flashcards_generator?definitions=" + encodeURIComponent(JSON.stringify(definitions));
             })
             .catch(function(error) {

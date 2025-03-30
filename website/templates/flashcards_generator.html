@@ -1,8 +1,164 @@
 {% extends "base.html" %}
-{% block title %} flashcards_generator {% endblock %}
-{% block content %}
-<div>
 
-    <h1>yo this is the flashcards generator page</h1>
+
+{% block title %}
+    Flashcards Generator
+{% endblock %}
+
+{% block content %}
+<style>.flashcard-container {
+    border-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #350568; 
+    border-radius: 20px;
+}
+
+.flashcard {
+    width: 1200px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #500eba;
+    cursor: pointer;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+    perspective: 1500px;
+    border-radius: 20px;
+}
+#previousButton, #nextButton {
+    background-color: #420bd7;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 20px;
+}
+#previousButton {
+    margin-right: 100px;
+}
+#nextButton {
+    margin-left: 100px;
+}
+.card-front, .card-back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backface-visibility: hidden;
+    border-radius: 20px;
+}
+#card-front-content, #card-back-content {
+    padding: 20px;
+    color: white;
+    font-size: 70px;
+    text-align: center;
+    line-height: 1;
+    font-family: 'Open Sans', Serif;
+}
+#Learned {
+    background-color: #420bd7;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 20px;
+    margin-top: 20px;
+}
+.card-back {
+    transform: rotateY(180deg);
+    background-color: #bd0c0c; /* Lighter background for contrast */
+}
+
+.flashcard.flipped {
+    transform: rotateY(180deg);
+}
+
+.buttons-container {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+</style>
+<div class="flashcard-container">
+    <div class="flashcard" onclick="flipCard()">
+        <div class="card-front" id="card-front-content">
+            <!-- This will display the first word initially -->
+            {{ word_definitions[0]['word'] if word_definitions else "" }}
+        </div>
+        <div class="card-back" id="card-back-content">
+            <!-- This will display the first definition initially -->
+            {{ word_definitions[0]['definition'] if word_definitions else "" }}
+        </div>
+    </div>
+
+    <div class="buttons-container">
+        <button id="previousButton" onclick="previousWord()">Previous word</button>
+        <button id="nextButton" onclick="nextWord()">Next word</button>
+    </div>
+    <div class ="learned-button">
+        <button id="Learned" onclick="Learned()">Learned</button>
+    </div>
+
 </div>
+
+<script>
+let currentIndex = 0; // Starts from the first word-definition pair
+const words = {{ word_definitions|tojson|safe }}; // Convert the word_definitions to a JS array of objects
+const previousButton = document.getElementById('previousButton');
+const nextButton = document.getElementById('nextButton');
+
+// Disable the previous button initially since we start at the first card
+previousButton.disabled = true;
+
+function flipCard() {
+    const flashcard = document.querySelector('.flashcard');
+    flashcard.classList.toggle('flipped');
+}
+
+function previousWord() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        updateCard();
+    }
+}
+
+function nextWord() {
+    if (currentIndex < words.length - 1) {
+        currentIndex++;
+        updateCard();
+    }
+}
+function Learned() {
+    fetch("/complete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      window.location.href = "/complete"
+    }
+
+
+
+function updateCard() {
+    document.getElementById('card-front-content').textContent = words[currentIndex]['word'];
+    document.getElementById('card-back-content').textContent = words[currentIndex]['definition'];
+
+    // Check if the previous button should be disabled
+    previousButton.disabled = currentIndex === 0;
+
+    // Check if the next button should be disabled
+    nextButton.disabled = currentIndex === words.length - 1;
+}
+</script>
+
+
+
 {% endblock %}

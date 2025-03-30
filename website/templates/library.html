@@ -1,32 +1,50 @@
-{% extends "base.html" %}
-{% block title %} library {% endblock %}
-{% block content %}
+{% extends "base.html" %} {% block title %} library {% endblock %} {% block
+content %}
 <head>
-    <style>
-        
-
-        
-        
-        .content h1{
-            font-family: 'Open Sans', sans-serif;
-            font-size: 20px;
-            text-decoration: none;
-        }
-        .content a:hover{
-            color:black;
-
-        }
-        .content a{
-            text-decoration: none;
-            font-size:20px;
-            color: rgb(194, 10, 10);
-        }
-        
-    
-    </style>
+  <style>
+    .content h1 {
+      font-family: "Open Sans", sans-serif;
+      font-size: 20px;
+      text-decoration: none;
+    }
+    .content a:hover {
+      color: black;
+    }
+    .content a {
+      text-decoration: none;
+      font-size: 20px;
+      color: rgb(194, 10, 10);
+    }
+    .table,
+    th,
+    td {
+      border: 2px solid;
+      background-color: rgb(0, 0, 0);
+    }
+    #definitions {
+      color: rgb(201, 11, 11);
+    }
+    #words {
+      color: rgb(249, 249, 249);
+    }
+  </style>
 </head>
-<div class = "flashcards_home">
-
-    <h1>Hello this is the word library</h1>
+<div class="flashcards_home">
+  <table class="table" style="margin-top: 60px; padding: 5rem">
+    <thead>
+      <tr>
+        <th>Word</th>
+        <th>Definition</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for words in learned_words %}
+      <tr>
+        <td class="words_defs" id="words">{{words.word}}</td>
+        <td class="words_defs" id="Definitions">{{words.definition}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock %}
